@@ -1,17 +1,17 @@
 import { expect } from 'chai';
-import { GethProvider } from '../src';
+import { DGethProvider } from '../src';
 import { Wallet } from '@ethersproject/wallet';
 import { Interface } from '@ethersproject/abi';
 import { Contract, ContractFactory } from '@ethersproject/contracts';
 import WETH from './contracts/WETH9.json';
 import { utils } from 'ethers';
 
-describe('GethProvider', () => {
-  let provider: GethProvider;
+describe('DGethProvider', () => {
+  let provider: DGethProvider;
   let wallet: Wallet;
 
   beforeEach(async function () {
-    provider = new GethProvider();
+    provider = new DGethProvider();
     wallet = new Wallet(
       '0xee79b5f6e221356af78cf4c36f4f7885a11b67dfcc81c34d80249947330c0f82',
     ).connect(provider);
@@ -85,8 +85,8 @@ describe('GethProvider', () => {
       data: depositData,
       to: address,
       value,
-      gasPrice: 86599250000,
-      gasLimit: 100000,
+      gasPrice: 86_599_250_000,
+      gasLimit: 100_000,
       nonce: 1,
     });
     await provider.sendTransaction(tx);
@@ -102,8 +102,8 @@ describe('GethProvider', () => {
     const deployTx = await wallet.signTransaction({
       ...deployData,
       nonce: 0,
-      gasLimit: 10000000,
-      gasPrice: 875000000,
+      gasLimit: 10_000_000,
+      gasPrice: 875_000_000,
     });
     await provider.sendTransaction(deployTx);
 
@@ -140,8 +140,8 @@ describe('GethProvider', () => {
       const deployTx = await wallet.signTransaction({
         ...deployData,
         nonce,
-        gasLimit: 10000000,
-        gasPrice: 875000000,
+        gasLimit: 10_000_000,
+        gasPrice: 875_000_000,
       });
       await provider.sendTransaction(deployTx);
 
@@ -162,6 +162,7 @@ describe('GethProvider', () => {
   });
 
   it('getLogs', async () => {
+    // @ts-expect-error
     expect((await provider.getLogs({ from: 0, to: 10 })).length).to.eq(0);
     // deploy WETH
     const contractInterface = new Interface(WETH.abi);
@@ -170,8 +171,8 @@ describe('GethProvider', () => {
     const deployTx = await wallet.signTransaction({
       ...deployData,
       nonce: 0,
-      gasLimit: 10000000,
-      gasPrice: 875000000,
+      gasLimit: 10_000_000,
+      gasPrice: 875_000_000,
     });
     await provider.sendTransaction(deployTx);
 
@@ -186,13 +187,14 @@ describe('GethProvider', () => {
       data: depositData,
       to: address,
       value,
-      gasPrice: 865992500,
-      gasLimit: 100000,
+      gasPrice: 865_992_500,
+      gasLimit: 100_000,
       nonce: 1,
     });
     const receipt = await provider.sendTransaction(tx);
 
     const logs = await provider.getLogs({
+      // @ts-expect-error
       from: 0,
       to: await provider.getBlockNumber(),
     });
@@ -209,8 +211,8 @@ describe('GethProvider', () => {
     const deployTx = await wallet.signTransaction({
       ...deployData,
       nonce: 0,
-      gasLimit: 10000000,
-      gasPrice: 875000000,
+      gasLimit: 10_000_000,
+      gasPrice: 875_000_000,
     });
     await provider.sendTransaction(deployTx);
 

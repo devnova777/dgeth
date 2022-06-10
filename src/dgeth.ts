@@ -12,19 +12,19 @@ import type {
   Filter,
   Listener,
   Provider,
-} from '@ethersproject/abstract-provider';
-import type { Network } from '@ethersproject/networks';
+} from '@ethersproject/abstract-provider/lib.esm/index.js';
+import type { Network } from '@ethersproject/networks/lib.esm/index.js';
 import { Simulator } from './native';
-import { resolveProperties } from '@ethersproject/properties';
-import { VError } from "verror"
+import { resolveProperties } from '@ethersproject/properties/lib.esm/index.js';
+
 
 async function noBlockTag(blockTag: any) {
   if (await blockTag) {
-    throw new VError('Not implemented: blockTag');
+    throw new Error('Not implemented: blockTag');
   }
 }
 
-export class GethProvider extends providers.Provider {
+export class DGethProvider extends providers.Provider {
   sim: Simulator;
 
   constructor() {
@@ -41,13 +41,13 @@ export class GethProvider extends providers.Provider {
   }
 
   emit(eventName: EventType, ...args: Array<any>): boolean {
-    throw new VError('Not implemented');
+    throw new Error('Not implemented');
   }
 
   estimateGas(
     transaction: utils.Deferrable<TransactionRequest>,
   ): Promise<BigNumber> {
-    throw new VError('Not implemented');
+    throw new Error('Not implemented');
   }
 
   async getBalance(
@@ -57,7 +57,7 @@ export class GethProvider extends providers.Provider {
     await noBlockTag(blockTag);
     const address = await addressOrName;
     if (!utils.isAddress(address)) {
-      throw new VError('Not implemented: ENS');
+      throw new Error('Not implemented: ENS');
     }
     return BigNumber.from(this.sim.getBalance(address));
   }
@@ -65,7 +65,7 @@ export class GethProvider extends providers.Provider {
   getBlock(
     blockHashOrBlockTag: BlockTag | string | Promise<BlockTag | string>,
   ): Promise<Block> {
-    throw new VError('Not implemented');
+    throw new Error('Not implemented');
   }
 
   getBlockNumber(): Promise<number> {
@@ -75,7 +75,7 @@ export class GethProvider extends providers.Provider {
   getBlockWithTransactions(
     blockHashOrBlockTag: BlockTag | string | Promise<BlockTag | string>,
   ): Promise<BlockWithTransactions> {
-    throw new VError('Not implemented');
+    throw new Error('Not implemented');
   }
 
   async getCode(
@@ -107,7 +107,7 @@ export class GethProvider extends providers.Provider {
     position: BigNumberish | Promise<BigNumberish>,
     blockTag?: BlockTag | Promise<BlockTag>,
   ): Promise<string> {
-    throw new VError('Not implemented');
+    throw new Error('Not implemented');
   }
 
   getTransaction(transactionHash: string): Promise<TransactionResponse> {
@@ -131,7 +131,7 @@ export class GethProvider extends providers.Provider {
       confirmations: 0,
       from: '0x',
       wait: () => {
-        throw new VError('Not implemented');
+        throw new Error('Not implemented');
       },
     });
   }
@@ -144,27 +144,27 @@ export class GethProvider extends providers.Provider {
   }
 
   getTransactionReceipt(transactionHash: string): Promise<TransactionReceipt> {
-    throw new VError('Not implemented');
+    throw new Error('Not implemented');
   }
 
   listenerCount(eventName?: EventType): number {
-    throw new VError('Not implemented');
+    throw new Error('Not implemented');
   }
 
   listeners(eventName?: EventType): Array<Listener> {
-    throw new VError('Not implemented');
+    throw new Error('Not implemented');
   }
 
   lookupAddress(address: string | Promise<string>): Promise<string> {
-    throw new VError('Not implemented');
+    throw new Error('Not implemented');
   }
 
   off(eventName: EventType, listener?: Listener): Provider {
-    throw new VError('Not implemented');
+    throw new Error('Not implemented');
   }
 
   on(eventName: EventType, listener: Listener): Provider {
-    throw new VError('Not implemented');
+    throw new Error('Not implemented');
   }
 
   once(eventName: EventType, listener: Listener): Provider;
@@ -174,11 +174,11 @@ export class GethProvider extends providers.Provider {
     eventName: EventType | 'block',
     listener: Listener | (() => void),
   ): Provider | void {
-    throw new VError('Not implemented');
+    throw new Error('Not implemented');
   }
 
   removeAllListeners(eventName?: EventType): Provider {
-    throw new VError('Not implemented');
+    throw new Error('Not implemented');
   }
 
   async resolveName(name: string | Promise<string>): Promise<string> {
@@ -203,6 +203,6 @@ export class GethProvider extends providers.Provider {
     confirmations?: number,
     timeout?: number,
   ): Promise<TransactionReceipt> {
-    throw new VError('Not implemented');
+    throw new Error('Not implemented');
   }
 }
