@@ -3,9 +3,7 @@
     "declaration": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "lib": [
-      "ES2018"
-    ],
+    "lib": ["ES2018"],
     "module": "CommonJS",
     "moduleResolution": "node",
     "resolveJsonModule": true,
@@ -14,26 +12,13 @@
     "target": "ES2018",
     "rootDir": ".",
     "outDir": "./dist",
-    "types": [
-      "@types/node",
-      "@types/ffi-napi",
-      "@types/chai",
-      "@types/mocha"
-    ],
+    "types": ["@types/node", "@types/ffi-napi", "@types/chai", "@types/mocha"],
     "plugins": [
       {
         "name": "typescript-eslint-language-service"
       }
     ]
   },
-  "include": [
-    "src/**/*.ts",
-    "tests/**/*.ts"
-  ],
-  "exclude": [
-    "**/node_modules",
-    "**/.*/",
-    "src/**/*.test.ts",
-    "tmp/*.ts"
-  ]
+  "include": ["src/**/*.ts", "tests/**/*.ts"],
+  "exclude": ["**/node_modules", "**/.*/", "src/**/*.test.ts", "tmp/*.ts"]
 }

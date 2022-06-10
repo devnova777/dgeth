@@ -17,7 +17,6 @@ import type { Network } from '@ethersproject/networks/lib.esm/index.js';
 import { Simulator } from './native';
 import { resolveProperties } from '@ethersproject/properties/lib.esm/index.js';
 
-
 async function noBlockTag(blockTag: any) {
   if (await blockTag) {
     throw new Error('Not implemented: blockTag');
