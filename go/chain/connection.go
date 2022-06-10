@@ -11,8 +11,6 @@ import (
 
 type ReceiptProvider interface {
 	TransactionReceipt(ctx context.Context, txHash common.Hash) (*types.Receipt, error)
-
-	// Force a block creation event if running in simulator
 	Commit()
 }
 
