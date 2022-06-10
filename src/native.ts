@@ -1,6 +1,6 @@
 import * as ffi from 'ffi-napi';
 import { join } from 'path';
-import type { TransactionRequest, Filter } from '@ethersproject/abstract-provider';
+import type { TransactionRequest, Filter } from '@ethersproject/abstract-provider/lib.esm/index.js';
 import { utils } from 'ethers';
 
 export const library = ffi.Library(join(__dirname, '../go/build/dgeth.dylib'), {
@@ -41,17 +41,17 @@ export class Simulator {
   }
 
   getBalance(address: string): string {
-    // @ts-expect-error
+// @ts-ignore
     return library.getBalance(this.id, address);
   }
 
   sendTransaction(data: string): string {
-    // @ts-expect-error
+// @ts-ignore
     return library.sendTransaction(this.id, data);
   }
 
   getChainID(): string {
-    // @ts-expect-error
+// @ts-ignore
     return library.getChainID(this.id);
   }
 
@@ -69,7 +69,7 @@ export class Simulator {
   }
 
   getTransaction(hash: string): string {
-    // @ts-expect-error
+// @ts-ignore
     return library.getTransaction(this.id, hash);
   }
 }
