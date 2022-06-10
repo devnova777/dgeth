@@ -1,12 +1,15 @@
 import * as ffi from 'ffi-napi';
 import { join } from 'path';
-import type { TransactionRequest, Filter } from '@ethersproject/abstract-provider/lib.esm/index.js';
+import type {
+  TransactionRequest,
+  Filter,
+} from '@ethersproject/abstract-provider/lib.esm/index.js';
 import { utils } from 'ethers';
 
 export const library = ffi.Library(join(__dirname, '../go/build/dgeth.dylib'), {
   cgoCurrentMillis: ['int', []],
   newSimulator: ['int', []],
-  getBlockNumber: ['string', ['int'] ],
+  getBlockNumber: ['string', ['int']],
   getChainID: ['string', ['int']],
   sendTransaction: ['string', ['int', 'string']],
   getBalance: ['string', ['int', 'string']],
@@ -41,17 +44,17 @@ export class Simulator {
   }
 
   getBalance(address: string): string {
-// @ts-ignore
+    // @ts-ignore
     return library.getBalance(this.id, address);
   }
 
   sendTransaction(data: string): string {
-// @ts-ignore
+    // @ts-ignore
     return library.sendTransaction(this.id, data);
   }
 
   getChainID(): string {
-// @ts-ignore
+    // @ts-ignore
     return library.getChainID(this.id);
   }
 
@@ -69,7 +72,7 @@ export class Simulator {
   }
 
   getTransaction(hash: string): string {
-// @ts-ignore
+    // @ts-ignore
     return library.getTransaction(this.id, hash);
   }
 }
