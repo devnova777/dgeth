@@ -1,0 +1,47 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": false,
+    "esModuleInterop": false,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "removeComments": true,
+    "incremental": true,
+    "tsBuildInfoFile": "./",
+    "preserveValueImports": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowUnreachableCode": false,
+    "strictPropertyInitialization": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "isolatedModules": true,
+    "declaration": true,
+    "sourceMap": false,
+    "module": "ES2020",
+    "moduleResolution": "node",
+    "target": "ESNext",
+    "rootDir": ".",
+    "outDir": "./dist",
+    "types": [
+      "@types/node",
+      "@types/ffi-napi",
+      "@types/chai",
+      "@types/mocha"
+    ],
+    "plugins": [
+      {
+        "name": "typescript-eslint-language-service"
+      }
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "tests/**/*.ts"
+  ],
+  "exclude": [
+    "**/node_modules",
+    "**/.*/",
+    "src/**/*.test.ts",
+    "tmp/*.ts"
+  ]
+}

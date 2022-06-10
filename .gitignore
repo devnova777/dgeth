@@ -4,7 +4,9 @@ cache/
 artifacts/
 logs
 *.log
-
+go/vendor
+go/imports
+go/build
 ## CVE-2021-21300 style exploits
 .\#*
 
