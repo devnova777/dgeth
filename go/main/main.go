@@ -6,12 +6,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"math/big"
 	"math/rand"
 	"strconv"
+	"strings"
 	"time"
-
-	"C"
 
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
@@ -19,18 +17,13 @@ import (
 	"github.com/sambacha/dgeth/simulator"
 )
 
-type TransactionRequest struct {
-	To    *string `json:"to"`
-	From  *string `json:"from"`
-	Nonce *string `json:"nonce"`
+/*
+// C code written here would be compiled together with Go code.
 
-	GasLimit *string `json:"gasLimit"`
-	GasPrice *string `json:"gasPrice"`
+#include "main.h"
 
-	Data    *string `json:"data"`
-	Value   *string `json:"value"`
-	ChainId *uint64 `json:"chainId"`
-}
+*/
+import "C"
 
 func main() {}
 
@@ -55,7 +48,37 @@ func newSimulator() C.int {
 func getBlockNumber(simID C.int) *C.char {
 	sim := getSimulator(simID)
 	bn := sim.GetLatestBlockNumber()
+	// TODO: Convert to base 16?
 	return C.CString(bn.String())
+}
+
+//export getBlock
+func getBlock(simID C.int, c_hashOrTag *C.char) *C.char {
+	sim := getSimulator(simID)
+	hashOrTag := C.GoString(c_hashOrTag)
+
+	var blockHeader *types.Header
+	if hashOrTag == "latest" {
+		blockHeader = sim.Backend.Blockchain().CurrentHeader()
+	} else if strings.HasPrefix(hashOrTag, "0x") && len(hashOrTag) == 66 {
+		hash := common.HexToHash(hashOrTag)
+		blockHeader = sim.Backend.Blockchain().GetHeaderByHash(hash)
+	} else {
+		blockNumber, err := strconv.ParseInt(hashOrTag, 16, 64)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		block := sim.Backend.Blockchain().GetBlockByNumber(uint64(blockNumber))
+		blockHeader = block.Header()
+	}
+
+	logsJson, err := json.Marshal(blockHeader)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return C.CString(string(logsJson))
 }
 
 //export getCode
@@ -120,46 +143,15 @@ func getLogs(simID C.int, queryJson *C.char) *C.char {
 }
 
 //export call
-func call(simID C.int, msgJson *C.char) *C.char {
+func call(simID C.int, msg TransactionRequest) *C.char {
 	sim := getSimulator(simID)
-	var msg TransactionRequest
 
-	err := json.Unmarshal([]byte(C.GoString(msgJson)), &msg)
+	callMsg, err := transactionRequestToCallMsg(&msg)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var callMsg ethereum.CallMsg
-
-	if msg.From != nil {
-		callMsg.From = common.HexToAddress(*msg.From)
-	}
-	if msg.To != nil {
-		temp := common.HexToAddress(*msg.To)
-		callMsg.To = &temp
-	}
-	if msg.GasLimit != nil {
-		value, err := strconv.ParseUint(*msg.GasLimit, 16, 64)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		callMsg.Gas = value
-	}
-	if msg.GasPrice != nil {
-		callMsg.GasPrice = big.NewInt(0)
-		callMsg.GasPrice.SetString(*msg.GasPrice, 16)
-	}
-	if msg.Data != nil {
-		data, err := hex.DecodeString((*msg.Data)[2:])
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		callMsg.Data = data
-	}
-
-	res, err := sim.Backend.CallContract(context.Background(), callMsg, nil)
+	res, err := sim.Backend.CallContract(context.Background(), *callMsg, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -191,7 +183,7 @@ func getTransaction(simID C.int, txHash *C.char) *C.char {
 }
 
 //export sendTransaction
-func sendTransaction(simID C.int, txData *C.char) *C.char {
+func sendTransaction(simID C.int, txData *C.char) TransactionReceipt {
 	sim := getSimulator(simID)
 
 	bytes, err := hex.DecodeString(C.GoString(txData)[2:])
@@ -217,12 +209,13 @@ func sendTransaction(simID C.int, txData *C.char) *C.char {
 		log.Fatal(err)
 	}
 
-	receiptJson, err := json.Marshal(receipt)
+	signer := types.MakeSigner(sim.Backend.Blockchain().Config(), sim.GetLatestBlockNumber())
+	res, err := createTransactionReceipt(tx, receipt, signer)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	return C.CString(string(receiptJson))
+	return *res
 }
 
 func getSimulator(simID C.int) *simulator.Simulator {
@@ -247,4 +240,26 @@ func cgoSeed(m C.long) {
 //export cgoRandom
 func cgoRandom(m C.int) C.int {
 	return C.int(rand.Intn(int(m)))
+}
+
+//export countLines
+func countLines(str *C.char) int32 {
+	go_str := C.GoString(str)
+	n := strings.Count(go_str, "\n")
+	return int32(n)
+}
+
+//export toUpper
+func toUpper(str *C.char) *C.char {
+	go_str := C.GoString(str)
+	upper := strings.ToUpper(go_str)
+	return C.CString(upper)
+}
+
+//export sumProduct
+func sumProduct(intput InputStruct) OutputStruct {
+	return OutputStruct{
+		Sum:     intput.A + intput.B,
+		Product: intput.A * intput.B,
+	}
 }
