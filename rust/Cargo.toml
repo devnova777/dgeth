@@ -1,0 +1,18 @@
+[package]
+name = "dreth"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+node-bindgen = { version = "5.0" }
+
+[build-dependencies]
+node-bindgen = { version = "5.0", features = ["build"] }
+bindgen = "0.60.1"
+
+[dev-dependencies]
+proptest = "1.0.0"
