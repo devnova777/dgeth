@@ -1,0 +1,1 @@
+#include "../go/build/dgeth.h"
