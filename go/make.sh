@@ -1,9 +1,17 @@
 #!/usr/bin/env bash
+
 export CGO_ENABLED=0
 export GO111MODULE=on
+#export PATH /toolchain/bin:/toolchain/go/bin
+export GOPROXY https://proxy.golang.org
+export GOCACHE /.cache/go-build
+export GOMODCACHE /.cache/mod
+echo "Building dgeth.."
+
 go build -buildmode c-shared -o build/dgeth.dylib -ldflags "-w -extldflags -static" github.com/sambacha/dgeth/main
 go build -buildmode c-archive -o build/dgeth.a github.com/sambacha/dgeth/main
 cp main/main.h build
+
 
 # 	go build -buildmode c-shared -o build/dgeth.node github.com/sambacha/dgeth/go-napi 
 # Path: go/build.sh
