@@ -82,8 +82,6 @@ Or customize it for research and simulation:
 ./build/bin/geth --nodiscover --maxpeers 0 --mine --miner.threads=1
 ```
 
----
-
 ## 🔬 Philosophy
 
 > “Degeneracy, by design.”
